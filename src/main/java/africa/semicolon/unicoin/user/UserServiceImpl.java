@@ -1,8 +1,10 @@
 package africa.semicolon.unicoin.user;
 
-import africa.semicolon.unicoin.email.EmailSender;
+import africa.semicolon.unicoin.exceptions.GenericHandlerException;
 import africa.semicolon.unicoin.registration.token.ConfirmationToken;
 import africa.semicolon.unicoin.registration.token.ConfirmationTokenService;
+import africa.semicolon.unicoin.user.dto.request.LoginRequest;
+import africa.semicolon.unicoin.user.dto.response.LoginResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,6 +32,18 @@ public class UserServiceImpl implements UserService{
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
+    }
+
+    @Override
+    public LoginResponse login(LoginRequest loginRequest) {
+        User foundUser = userRepository.findByEmailAddressIgnoreCase(loginRequest.getEmailAddress())
+                .orElseThrow(()->new GenericHandlerException("User with " + loginRequest.getEmailAddress() +
+                        " does not exist"));
+        LoginResponse loginResponse = new LoginResponse();
+        if (!foundUser.getPassword().equals(loginRequest.getPassword()))loginResponse.setMessage("Login incorrect");
+        if (foundUser.getPassword().equals(loginRequest.getPassword())) loginResponse.setMessage("login successful");
+        return loginResponse;
+
     }
 
     @Override
