@@ -1,6 +1,7 @@
 package africa.semicolon.unicoin.user;
 
 import africa.semicolon.unicoin.email.EmailSender;
+import africa.semicolon.unicoin.exceptions.GenericHandlerException;
 import africa.semicolon.unicoin.registration.token.ConfirmationToken;
 import africa.semicolon.unicoin.registration.token.ConfirmationTokenService;
 import lombok.AllArgsConstructor;
@@ -35,5 +36,14 @@ public class UserServiceImpl implements UserService{
     @Override
     public void enableUser(String email) {
         userRepository.enable(email);
+    }
+
+    @Override
+    public String deleteUserByEmailAddress(String emailAddress) {
+        var foundUser = userRepository.findByEmailAddressIgnoreCase(emailAddress)
+                .orElseThrow(()-> new GenericHandlerException("User with this "+ emailAddress +" does not exist"));
+        foundUser.setEmailAddress("deleted" +emailAddress);
+        userRepository.save(foundUser);
+        return "Deleted successfully";
     }
 }

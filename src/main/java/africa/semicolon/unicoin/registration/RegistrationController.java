@@ -29,16 +29,17 @@ public class RegistrationController {
                 .path(httpServletRequest.getRequestURI())
                 .data(createdUser)
                 .isSuccessful(true).build();
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.CREATED);
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
     }
     @PostMapping("/confirm")
     public ResponseEntity<?>confirmToken(@RequestBody ConfirmTokenRequest confirmTokenRequest, HttpServletRequest httpServletRequest){
+//        registrationService.confirmToken(confirmTokenRequest);
         ApiResponse apiResponse = ApiResponse.builder()
                 .statusCode(HttpStatus.OK.value())
                 .timeStamp(ZonedDateTime.now())
                 .path(httpServletRequest.getRequestURI())
                 .data(registrationService.confirmToken(confirmTokenRequest))
                 .isSuccessful(true).build();
-        return new ResponseEntity<ApiResponse>(apiResponse, HttpStatus.OK);
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 }
