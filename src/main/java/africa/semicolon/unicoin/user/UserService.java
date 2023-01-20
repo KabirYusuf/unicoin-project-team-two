@@ -6,7 +6,7 @@ import africa.semicolon.unicoin.user.dto.response.LoginResponse;
 public interface UserService {
     String createAccount(User user);
 
-    LoginResponse login(LoginRequest loginRequest);
+    String login(LoginRequest loginRequest);
 
     void enableUser(String email);
 }

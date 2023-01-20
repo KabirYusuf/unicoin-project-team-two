@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 @Service
@@ -35,14 +36,15 @@ public class UserServiceImpl implements UserService{
     }
 
     @Override
-    public LoginResponse login(LoginRequest loginRequest) {
+    public String login(LoginRequest loginRequest) {
         User foundUser = userRepository.findByEmailAddressIgnoreCase(loginRequest.getEmailAddress())
                 .orElseThrow(()->new GenericHandlerException("User with " + loginRequest.getEmailAddress() +
                         " does not exist"));
         LoginResponse loginResponse = new LoginResponse();
-        if (!foundUser.getPassword().equals(loginRequest.getPassword()))loginResponse.setMessage("Login incorrect");
-        if (foundUser.getPassword().equals(loginRequest.getPassword())) loginResponse.setMessage("login successful");
-        return loginResponse;
+        if (!Objects.equals(foundUser.getPassword(), loginRequest.getPassword()))throw new GenericHandlerException("Login incorrect");
+
+
+        return "Login successful";
 
     }
 
