@@ -1,11 +1,11 @@
 package africa.semicolon.unicoin;
 
 import africa.semicolon.unicoin.email.EmailSender;
-import africa.semicolon.unicoin.registration.token.ConfirmationTokenRepository;
+
 import africa.semicolon.unicoin.registration.token.ConfirmationTokenService;
 import africa.semicolon.unicoin.user.UserRepository;
-import africa.semicolon.unicoin.user.UserService;
 import africa.semicolon.unicoin.user.UserServiceImpl;
+import africa.semicolon.unicoin.user.UserService;
 
 import static org.mockito.Mockito.mock;
 

@@ -1,7 +1,7 @@
 package africa.semicolon.unicoin.user;
 
+import africa.semicolon.unicoin.user.dto.request.DeleteRequest;
 import africa.semicolon.unicoin.user.dto.request.LoginRequest;
-import africa.semicolon.unicoin.user.dto.response.LoginResponse;
 
 public interface UserService {
     String createAccount(User user);
@@ -10,5 +10,5 @@ public interface UserService {
 
     void enableUser(String email);
 
-    String deleteUserByEmailAddress(String emailAddress);
+    String deleteUserByEmailAddress(String email, DeleteRequest deleteRequest);
 }
