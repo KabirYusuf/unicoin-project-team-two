@@ -27,17 +27,18 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(GenericHandlerException.class)
-    public ResponseEntity<ApiResponse> GenericHandler(
-            RegistrationException registrationException,
+    public ResponseEntity<ApiResponse> genericHandler(
+            GenericHandlerException genericHandlerException,
             HttpServletRequest httpServletRequest
     ) {
         ApiResponse apiResponse = ApiResponse.builder()
                 .timeStamp(ZonedDateTime.now())
-                .data(registrationException.getMessage())
+                .data(genericHandlerException.getMessage())
                 .path(httpServletRequest.getRequestURI())
                 .statusCode(HttpStatus.CONFLICT.value())
                 .isSuccessful(false)
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.BAD_REQUEST);
     }
+
 }

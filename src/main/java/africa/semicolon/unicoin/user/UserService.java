@@ -4,4 +4,6 @@ public interface UserService {
     String createAccount(User user);
 
     void enableUser(String email);
+
+    String deleteUserByEmailAddress(String emailAddress);
 }
