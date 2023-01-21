@@ -42,7 +42,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public String deleteUserByEmailAddress(String emailAddress) {
         var foundUser = userRepository.findByEmailAddressIgnoreCase(emailAddress)
-                .orElseThrow(()-> new GenericHandlerException("User with this "+ emailAddress +" does not exist"));
+                .orElseThrow(()-> new GenericHandlerException("User with this"+ emailAddress +" does not exist"));
         StringBuilder randomValues = RandomStringGenerator.randomStringGenerator(8);
         foundUser.setEmailAddress("deleted" +emailAddress + randomValues);
         userRepository.save(foundUser);
