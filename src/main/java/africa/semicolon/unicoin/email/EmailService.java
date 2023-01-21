@@ -23,13 +23,13 @@ public class EmailService implements EmailSender {
     @Async
     public void send(String to, String email) throws MessagingException {
         try {
-            MimeMessage mailMessage = javaMailSender.createMimeMessage();
-            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mailMessage,mailMessage.getEncoding());
+            MimeMessage mimeMessage = javaMailSender.createMimeMessage();
+            MimeMessageHelper mimeMessageHelper = new MimeMessageHelper(mimeMessage,mimeMessage.getEncoding());
             mimeMessageHelper.setSubject("Confirm your email");
             mimeMessageHelper.setTo(to);
             mimeMessageHelper.setFrom("sonkaybee@gmail.com");
             mimeMessageHelper.setText(email, true);
-            javaMailSender.send(mailMessage);
+            javaMailSender.send(mimeMessage);
         }catch (MessagingException e){
             log.info("problem2: ");
             log.info(e.getMessage());
