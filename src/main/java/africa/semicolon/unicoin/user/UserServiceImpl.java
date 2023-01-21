@@ -70,4 +70,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(foundUser);
         return "Deleted successfully";
     }
+
+    @Override
+    public String recoverPassword(String email) {
+        return null;
+    }
+
+
 }

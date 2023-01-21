@@ -11,4 +11,6 @@ public interface UserService {
     void enableUser(String email);
 
     String deleteUserByEmailAddress(String email, DeleteRequest deleteRequest);
+
+    String recoverPassword(String email);
 }
