@@ -9,4 +9,6 @@ public interface UserService {
     String login(LoginRequest loginRequest);
 
     void enableUser(String email);
+
+    String deleteUserByEmailAddress(String emailAddress);
 }
