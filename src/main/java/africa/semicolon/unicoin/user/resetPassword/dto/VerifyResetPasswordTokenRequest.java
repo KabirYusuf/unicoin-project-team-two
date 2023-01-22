@@ -1,4 +1,4 @@
-package africa.semicolon.unicoin.user.resetPassword.token.dto;
+package africa.semicolon.unicoin.user.resetPassword.dto;
 
 import lombok.Getter;
 import lombok.Setter;

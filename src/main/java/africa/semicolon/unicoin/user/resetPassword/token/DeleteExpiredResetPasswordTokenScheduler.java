@@ -1,5 +1,6 @@
 package africa.semicolon.unicoin.user.resetPassword.token;
 
+import africa.semicolon.unicoin.user.resetPassword.ResetPasswordTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
