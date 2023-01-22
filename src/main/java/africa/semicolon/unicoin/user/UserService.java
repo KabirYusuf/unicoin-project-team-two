@@ -14,5 +14,5 @@ public interface UserService {
 
     String deleteUserByEmailAddress(String email, DeleteRequest deleteRequest);
 
-    String resendConfirmationToken(ResendTokenRequest resendTokenRequest) throws MessagingException;
+
 }

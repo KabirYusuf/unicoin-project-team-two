@@ -32,19 +32,5 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PostMapping("/resend-token")
-    public ResponseEntity<?>resendConfirmationToken(@RequestBody ResendTokenRequest resendTokenRequest, HttpServletRequest httpServletRequest) throws MessagingException {
-        var token = userService.resendConfirmationToken(resendTokenRequest);
-        ApiResponse apiResponse = ApiResponse.builder()
-                .timeStamp(ZonedDateTime.now())
-                .path(httpServletRequest.getRequestURI())
-                .isSuccessful(true)
-                .data(token)
-                .statusCode(HttpStatus.OK.value())
-                .build();
-        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
-
-    }
-
 
 }
