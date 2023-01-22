@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -29,7 +30,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String createAccount(User user) {
-        userRepository.save(user);
+        saveUser(user);
         String token = UUID.randomUUID().toString();
         ConfirmationToken confirmationToken = new ConfirmationToken(
                 token,
@@ -39,6 +40,10 @@ public class UserServiceImpl implements UserService {
         );
         confirmationTokenService.saveConfirmationToken(confirmationToken);
         return token;
+    }
+
+    public void saveUser(User user) {
+        userRepository.save(user);
     }
 
     @Override
@@ -70,4 +75,11 @@ public class UserServiceImpl implements UserService {
         userRepository.save(foundUser);
         return "Deleted successfully";
     }
+
+    @Override
+    public Optional<User> findUserByEmailAddress(String email) {
+        return userRepository.findByEmailAddressIgnoreCase(email);
+    }
+
+
 }
