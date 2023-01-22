@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -72,8 +73,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String recoverPassword(String email) {
-        return null;
+    public Optional<User> findUserByEmailAddress(String email) {
+        return userRepository.findByEmailAddressIgnoreCase(email);
     }
 
 

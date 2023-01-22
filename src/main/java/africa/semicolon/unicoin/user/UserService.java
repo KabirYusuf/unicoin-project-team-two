@@ -3,14 +3,17 @@ package africa.semicolon.unicoin.user;
 import africa.semicolon.unicoin.user.dto.request.DeleteRequest;
 import africa.semicolon.unicoin.user.dto.request.LoginRequest;
 
+import java.util.Optional;
+
 public interface UserService {
     String createAccount(User user);
-
     String login(LoginRequest loginRequest);
 
     void enableUser(String email);
 
     String deleteUserByEmailAddress(String email, DeleteRequest deleteRequest);
 
-    String recoverPassword(String email);
+    Optional<User> findUserByEmailAddress(String email);
+
+
 }
