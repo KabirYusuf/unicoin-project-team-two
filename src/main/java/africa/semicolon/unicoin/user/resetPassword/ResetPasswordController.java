@@ -1,10 +1,10 @@
-package africa.semicolon.unicoin.user;
+package africa.semicolon.unicoin.user.resetPassword;
 
 
-import africa.semicolon.unicoin.user.resetPassword.token.ResetPasswordTokenService;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.EmailResetTokenRequest;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.PasswordRequest;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.VerifyResetPasswordTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.ResetPasswordTokenService;
+import africa.semicolon.unicoin.user.resetPassword.dto.EmailResetTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.dto.PasswordRequest;
+import africa.semicolon.unicoin.user.resetPassword.dto.VerifyResetPasswordTokenRequest;
 import africa.semicolon.unicoin.utils.ApiResponse;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;

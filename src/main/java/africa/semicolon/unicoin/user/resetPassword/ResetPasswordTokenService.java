@@ -1,12 +1,14 @@
-package africa.semicolon.unicoin.user.resetPassword.token;
+package africa.semicolon.unicoin.user.resetPassword;
 
 import africa.semicolon.unicoin.email.EmailSender;
 import africa.semicolon.unicoin.exceptions.GenericHandlerException;
 import africa.semicolon.unicoin.user.User;
 import africa.semicolon.unicoin.user.UserService;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.EmailResetTokenRequest;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.PasswordRequest;
-import africa.semicolon.unicoin.user.resetPassword.token.dto.VerifyResetPasswordTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.dto.EmailResetTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.dto.PasswordRequest;
+import africa.semicolon.unicoin.user.resetPassword.dto.VerifyResetPasswordTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.token.ResetPasswordToken;
+import africa.semicolon.unicoin.user.resetPassword.token.ResetPasswordTokenRepository;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
