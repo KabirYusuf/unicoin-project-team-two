@@ -1,16 +1,18 @@
 package africa.semicolon.unicoin.user.resetPassword.token;
 
 import africa.semicolon.unicoin.email.EmailSender;
-import africa.semicolon.unicoin.email.EmailService;
 import africa.semicolon.unicoin.exceptions.GenericHandlerException;
 import africa.semicolon.unicoin.user.User;
 import africa.semicolon.unicoin.user.UserService;
 import africa.semicolon.unicoin.user.resetPassword.token.dto.EmailResetTokenRequest;
+import africa.semicolon.unicoin.user.resetPassword.token.dto.PasswordRequest;
+import africa.semicolon.unicoin.user.resetPassword.token.dto.VerifyResetPasswordTokenRequest;
 import jakarta.mail.MessagingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -24,22 +26,23 @@ public class ResetPasswordTokenService {
     @Autowired
     private EmailSender emailSender;
 
-    public void createResetPasswordToken(ResetPasswordToken resetPasswordToken){
+    public void createResetPasswordToken(ResetPasswordToken resetPasswordToken) {
         resetPasswordTokenRepository.save(resetPasswordToken);
     }
-    public Optional<ResetPasswordToken> findToken(String token){
+
+    public Optional<ResetPasswordToken> findToken(String token) {
         return resetPasswordTokenRepository.findByToken(token);
     }
 
-    public  void deleteExpiredResetToken(){
+    public void deleteExpiredResetToken() {
         resetPasswordTokenRepository.deleteResetPasswordTokenByExpiresAtBefore(LocalDateTime.now());
     }
 
     public String emailResetToken(EmailResetTokenRequest emailResetTokenRequest) throws MessagingException {
 
         User foundUser = userService.findUserByEmailAddress(emailResetTokenRequest.getEmail())
-                .orElseThrow(()-> new GenericHandlerException("User does not exist"));
-        if (!foundUser.getIsDisabled())throw new GenericHandlerException("User has not been verified");
+                .orElseThrow(() -> new GenericHandlerException("User does not exist"));
+        if (!foundUser.getIsDisabled()) throw new GenericHandlerException("User has not been verified");
 
         String token = UUID.randomUUID().toString();
 
@@ -54,6 +57,31 @@ public class ResetPasswordTokenService {
         emailSender.send(foundUser.getEmailAddress(), buildEmail(foundUser.getFirstName(), token));
         return token;
     }
+
+    public String verifyResetPasswordToken(String email,
+                                           VerifyResetPasswordTokenRequest verifyResetPasswordTokenRequest) {
+        ResetPasswordToken token = findToken(verifyResetPasswordTokenRequest.getToken())
+                .orElseThrow(()->new GenericHandlerException("Token is invalid"));
+        if (token.getExpiresAt().isBefore(LocalDateTime.now()))throw new GenericHandlerException("Token has expired");
+        if (token.getResetAt() != null)throw new GenericHandlerException("Token has been used");
+        resetPasswordTokenRepository.setResetAt(LocalDateTime.now(), token.getToken());
+        return "password reset verification successful";
+    }
+
+    public String resetPassword(String email, PasswordRequest passwordRequest){
+        User user = userService.findUserByEmailAddress(email)
+                .orElseThrow(()-> new GenericHandlerException("User does not exit"));
+
+        if(!Objects.equals(passwordRequest.getPassword(), passwordRequest.getConfirmPassword()))
+            throw new GenericHandlerException("password does not match");
+        user.setPassword(passwordRequest.getPassword());
+        userService.saveUser(user);
+
+        return "change password successful";
+
+    }
+
+
 
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +
@@ -111,7 +139,7 @@ public class ResetPasswordTokenService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">" + link + "</p></blockquote>\n Link will expire in 10 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Please click on the below link to copy token: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">" + link + "</p></blockquote>\n Link will expire in 10 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +

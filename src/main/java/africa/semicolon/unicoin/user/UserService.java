@@ -10,6 +10,7 @@ public interface UserService {
     String login(LoginRequest loginRequest);
 
     void enableUser(String email);
+    void saveUser(User user);
 
     String deleteUserByEmailAddress(String email, DeleteRequest deleteRequest);
 
