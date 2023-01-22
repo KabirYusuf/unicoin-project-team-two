@@ -1,7 +1,9 @@
 package africa.semicolon.unicoin.user;
 
 import africa.semicolon.unicoin.user.dto.request.DeleteRequest;
+import africa.semicolon.unicoin.user.dto.request.ResendTokenRequest;
 import africa.semicolon.unicoin.utils.ApiResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -28,6 +30,20 @@ public class UserController {
                 .statusCode(HttpStatus.OK.value())
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PostMapping("/resend-token")
+    public ResponseEntity<?>resendConfirmationToken(@RequestBody ResendTokenRequest resendTokenRequest, HttpServletRequest httpServletRequest) throws MessagingException {
+        var token = userService.resendConfirmationToken(resendTokenRequest);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .data(token)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+
     }
 
 
