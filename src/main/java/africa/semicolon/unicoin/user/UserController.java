@@ -1,6 +1,8 @@
 package africa.semicolon.unicoin.user;
 
+import africa.semicolon.unicoin.user.dto.request.ChangePasswordRequest;
 import africa.semicolon.unicoin.user.dto.request.DeleteRequest;
+import africa.semicolon.unicoin.user.dto.response.ChangePasswordResponse;
 import africa.semicolon.unicoin.utils.ApiResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +27,20 @@ public class UserController {
                 .path(httpServletRequest.getRequestURI())
                 .isSuccessful(true)
                 .data(deleteUser)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+
+    @PutMapping("/{emailAddress}")
+    public ResponseEntity<?> changePassword(@PathVariable String emailAddress, @RequestBody ChangePasswordRequest changePasswordRequest,
+                                                 HttpServletRequest httpServletRequest) {
+        ChangePasswordResponse changePasswordResponse = userService.changePassword(emailAddress, changePasswordRequest);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .data(changePasswordResponse)
                 .statusCode(HttpStatus.OK.value())
                 .build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
