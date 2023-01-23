@@ -2,7 +2,6 @@ package africa.semicolon.unicoin.user;
 
 
 import africa.semicolon.unicoin.exceptions.GenericHandlerException;
-import africa.semicolon.unicoin.exceptions.WrongPasswordException;
 import africa.semicolon.unicoin.registration.token.ConfirmationToken;
 import africa.semicolon.unicoin.registration.token.ConfirmationTokenService;
 import africa.semicolon.unicoin.user.dto.request.ChangePasswordRequest;
@@ -85,13 +84,15 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordRequest) {
-        var queriedUser = userRepository.findByEmailAddressIgnoreCase(changePasswordRequest.getEmail())
+    public ChangePasswordResponse changePassword(String emailAddress, ChangePasswordRequest changePasswordRequest) {
+        var queriedUser = userRepository.findByEmailAddressIgnoreCase(emailAddress)
                 .orElseThrow(() -> new GenericHandlerException("User with this email does not exist"));
-        boolean isCorrectPassword = changePasswordRequest.getPassword().equals(queriedUser.getPassword());
+        boolean isCorrectPassword = changePasswordRequest.getCurrentPassword().equals(queriedUser.getPassword());
         if (!isCorrectPassword) {
-            throw new WrongPasswordException("Wrong Password");
+            throw new GenericHandlerException("Wrong Password");
         }
+        if (!Objects.equals(changePasswordRequest.getNewPassword(), changePasswordRequest.getConfirmNewPassword()))throw new GenericHandlerException("" +
+                "Password doesnt match");
         queriedUser.setPassword(changePasswordRequest.getNewPassword());
         userRepository.save(queriedUser);
         ChangePasswordResponse changePasswordResponse = new ChangePasswordResponse();

@@ -18,7 +18,7 @@ public interface UserService {
 
     Optional<User> findUserByEmailAddress(String email);
 
-    ChangePasswordResponse changePassword(ChangePasswordRequest changePasswordRequest);
+    ChangePasswordResponse changePassword(String emailAddress, ChangePasswordRequest changePasswordRequest);
 
 
 }

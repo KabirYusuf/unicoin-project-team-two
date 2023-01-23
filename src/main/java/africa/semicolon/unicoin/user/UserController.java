@@ -32,9 +32,18 @@ public class UserController {
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
-    @PutMapping("/{email}")
-    public ChangePasswordResponse changePassword(@PathVariable String email, @RequestBody ChangePasswordRequest changePasswordRequest) {
-        return userService.changePassword(changePasswordRequest);
+    @PutMapping("/{emailAddress}")
+    public ResponseEntity<?> changePassword(@PathVariable String emailAddress, @RequestBody ChangePasswordRequest changePasswordRequest,
+                                                 HttpServletRequest httpServletRequest) {
+        ChangePasswordResponse changePasswordResponse = userService.changePassword(emailAddress, changePasswordRequest);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .data(changePasswordResponse)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
     }
 
 
