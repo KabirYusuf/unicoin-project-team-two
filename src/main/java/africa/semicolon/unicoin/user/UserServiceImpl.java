@@ -51,7 +51,8 @@ public class UserServiceImpl implements UserService {
         User foundUser = userRepository.findByEmailAddressIgnoreCase(loginRequest.getEmailAddress())
                 .orElseThrow(()->new GenericHandlerException("User with " + loginRequest.getEmailAddress() +
                         " does not exist"));
-        LoginResponse loginResponse = new LoginResponse();
+        if (foundUser.getIsDisabled())throw new GenericHandlerException("Verify your account ");
+
         if (!Objects.equals(foundUser.getPassword(), loginRequest.getPassword()))throw new GenericHandlerException("Login incorrect");
 
 
