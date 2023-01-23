@@ -2,8 +2,10 @@ package africa.semicolon.unicoin.user;
 
 import africa.semicolon.unicoin.user.dto.request.ChangePasswordRequest;
 import africa.semicolon.unicoin.user.dto.request.DeleteRequest;
+import africa.semicolon.unicoin.user.dto.request.ResendTokenRequest;
 import africa.semicolon.unicoin.user.dto.response.ChangePasswordResponse;
 import africa.semicolon.unicoin.utils.ApiResponse;
+import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
