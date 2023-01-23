@@ -1,6 +1,7 @@
 package africa.semicolon.unicoin.registration;
 
 import africa.semicolon.unicoin.email.EmailSender;
+import africa.semicolon.unicoin.exceptions.GenericHandlerException;
 import africa.semicolon.unicoin.exceptions.RegistrationException;
 import africa.semicolon.unicoin.registration.dto.requests.ConfirmTokenRequest;
 import africa.semicolon.unicoin.registration.dto.requests.RegistrationRequest;
@@ -10,12 +11,14 @@ import africa.semicolon.unicoin.user.User;
 import africa.semicolon.unicoin.user.UserRepository;
 import africa.semicolon.unicoin.user.UserRole;
 import africa.semicolon.unicoin.user.UserService;
+import africa.semicolon.unicoin.user.dto.request.ResendTokenRequest;
 import jakarta.mail.MessagingException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Service
 @AllArgsConstructor
@@ -53,6 +56,22 @@ public class RegistrationService {
         confirmationTokenService.setConfirmedAt(token.getToken());
         userService.enableUser(confirmTokenRequest.getEmail());
         return "confirmed";
+    }
+
+    public String resendConfirmationToken(ResendTokenRequest resendTokenRequest) throws MessagingException {
+        var foundUser = userRepository.findByEmailAddressIgnoreCase(resendTokenRequest.getEmailAddress())
+                .orElseThrow(()-> new GenericHandlerException("User with this "+resendTokenRequest.getEmailAddress()  +" does not exist"));
+        if (!foundUser.getIsDisabled())throw new GenericHandlerException("You have already been verified");
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(
+                token,
+                LocalDateTime.now(),
+                LocalDateTime.now().plusMinutes(10),
+                foundUser
+        );
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        emailSender.send(resendTokenRequest.getEmailAddress(), buildEmail(foundUser.getFirstName(), token));
+        return token;
     }
     private String buildEmail(String name, String link) {
         return "<div style=\"font-family:Helvetica,Arial,sans-serif;font-size:16px;margin:0;color:#0b0c0c\">\n" +

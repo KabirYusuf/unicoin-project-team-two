@@ -2,6 +2,7 @@ package africa.semicolon.unicoin.registration;
 
 import africa.semicolon.unicoin.registration.dto.requests.ConfirmTokenRequest;
 import africa.semicolon.unicoin.registration.dto.requests.RegistrationRequest;
+import africa.semicolon.unicoin.user.dto.request.ResendTokenRequest;
 import africa.semicolon.unicoin.utils.ApiResponse;
 import jakarta.mail.MessagingException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -41,5 +42,18 @@ public class RegistrationController {
                 .data(registrationService.confirmToken(confirmTokenRequest))
                 .isSuccessful(true).build();
         return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+    }
+    @PostMapping("/resend-token")
+    public ResponseEntity<?>resendConfirmationToken(@RequestBody ResendTokenRequest resendTokenRequest, HttpServletRequest httpServletRequest) throws MessagingException {
+        var token = registrationService.resendConfirmationToken(resendTokenRequest);
+        ApiResponse apiResponse = ApiResponse.builder()
+                .timeStamp(ZonedDateTime.now())
+                .path(httpServletRequest.getRequestURI())
+                .isSuccessful(true)
+                .data(token)
+                .statusCode(HttpStatus.OK.value())
+                .build();
+        return new ResponseEntity<>(apiResponse, HttpStatus.OK);
+
     }
 }
